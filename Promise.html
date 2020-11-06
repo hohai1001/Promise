@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        - có 2 bước để viết promise
+        1. new Promise
+        2. Executor
+        - có 3 trạng thái trong promise
+        1. pedding (nếu không resolve hay reject sẽ bị memory leak)
+        2. Fulfilled (thành công)
+        3. reject (thất bại)
+        */
+
+        // new Promise là một object constructor
+        var promise = new Promise(
+            // Executor
+            function(resolve, reject) { // promise sẽ nhận vào constructor một function
+                // logic: mình tự viết
+                // thành công: resolve()
+                // thất bại: reject()
+                resolve();
+            }
+        );
+        
+        promise
+    //then đằng sau sẽ phải chờ then trước để lấy dữ liệu đầu vào. nếu then trước không return gì thì then sau sẽ là undefine
+            // .then(function() {
+            //     return 1;
+            // })
+            // .then(function(data) {
+            //     console.log(data);
+            //     return 2;
+            // })
+            // .then(function(data) {
+            //     console.log(data);
+            //     return 3
+            // })
+            // .then(function(data) {
+            //     console.log(data);
+            // })
+        
+    // then đầu tiên nếu như không trả về và không phải là promise thì then thứ 2 sẽ chạy luôn không chờ then đầu chạy xong
+            // .then(function(resolve) {
+            //    setTimeout(function() {
+            //        console.log(resolve);
+            //    }, 3000);
+            // })
+            // .then(function(data) {
+            //     console.log(data);
+            //     console.log(456);
+            // })
+
+    // trường hợp then đầu không trả về và có promise thì then thứ 2 sẽ phải chờ then 1 chạy xong mới chạy then 2
+            // .then(function() {
+            //    return new Promise(function(resolve = 20) {
+            //        setTimeout(function(){
+            //            resolve([1,2,3]);
+            //         }, 3000);
+            //    })
+            // })
+            // .then(function(data) {
+            //     console.log(data);
+            // })
+
+// trường hợp này khi mà khi tất cả then đang chạy mà gặp một thằng có lỗi thì sẽ dừng ngay tại đó, chạy xuống catch báo lỗi
+            .then(function() {
+                console.log(1);
+            })
+            .then(function() {
+                console.log(2);
+                return new Promise(function(resolve, reject) {
+                    reject('loi roi !');
+                })
+            })
+            .then(function() {
+                console.log(3);
+            })
+            .then(function() {
+                console.log(4);
+            })
+
+
+            .catch(function(err) {
+                console.log(err);
+            })
+            .finally(function() {
+                console.log('Done !');
+            })
+    </script>
+</body>
+</html>

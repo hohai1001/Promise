@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+/*
+        promise.race: cũng tương tự như promise.all làm tất cả hành động song song, nhưng khác nhau ở chỗ
+        hành động nào xong trước thì kết thúc tại đó luôn cho dù hành động đó lỗi hay không
+*/
+
+        let promise1 = new Promise(function(resolve) {
+            setTimeout(() => {
+                resolve(1);
+            }, 3000);
+        })
+
+        let promise3 = new Promise(function(resolve, reject) {
+            setTimeout(() => {
+                reject('loi roi !');
+            }, 4000);
+        })
+
+        //let promise3 = Promise.reject('loi roi !');
+
+        let promise2 = new Promise(function(resolve) {
+            setTimeout(() => {
+                resolve(23);
+            }, 2000);
+        })
+
+        Promise.race([promise2, promise1, promise3])
+            .then(function(result) {
+                console.log(result);
+            })
+            .catch(function(err) {
+                console.log(err);
+            })
+            .finally(function() {
+                console.log('Done !');
+            })
+    </script>
+</body>
+</html>
